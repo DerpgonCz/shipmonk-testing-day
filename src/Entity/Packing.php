@@ -6,16 +6,24 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(indexes={
+ *     @ORM\UniqueConstraint(name="key_unique_idx", columns={"cache_key"})
+ * })
+ * TODO: Add Created At field for lifetime?
  */
-class Packaging
+class Packing
 {
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     private ?int $id = null;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private string $cacheKey;
 
     /**
      * @ORM\Column(type="float")
@@ -35,18 +43,25 @@ class Packaging
     /**
      * @ORM\Column(type="float")
      */
-    private float $maxWeight;
+    private float $weight;
 
     public function __construct(
+        string $cacheKey,
         float $width,
         float $height,
         float $length,
-        float $maxWeight
+        float $weight
     ) {
+        $this->cacheKey = $cacheKey;
         $this->width = $width;
         $this->height = $height;
         $this->length = $length;
-        $this->maxWeight = $maxWeight;
+        $this->weight = $weight;
+    }
+
+    public function getCacheKey(): string
+    {
+        return $this->cacheKey;
     }
 
     public function getId(): ?int
@@ -69,10 +84,8 @@ class Packaging
         return $this->length;
     }
 
-    public function getMaxWeight(): float
+    public function getWeight(): float
     {
-        return $this->maxWeight;
+        return $this->weight;
     }
-
-
 }
